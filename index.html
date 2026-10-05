@@ -238,9 +238,10 @@ var G_IGL_CUERDAS = {p:"Iglesia Sagrado Corazón", i:["Violín 1: Mauricio Manri
 var G_LAF_PERC    = {p:"Teatro Antonio Lafalla", i:["Percusión: César Lara","Contrabajos: Delfina Maschio"]};
 var G_ALAS_VIENTOS= {p:"Orquesta Escuela Alas del Viento", i:["Bronces: Adriany Gómez","Maderas: Francisco Ludueña"]};
 var G_SECC = [
-  {p:"Iglesia Sagrado Corazón", i:["Cuerdas: Mauricio Manrique","Maderas: Francisco Ludueña"]},
-  {p:"Teatro Antonio Lafalla", i:["Percusión: César Lara","Bronces: Adriany Gómez"]}
+  {p:"Iglesia Sagrado Corazón", i:["Cuerdas","Maderas"]},
+  {p:"Teatro Antonio Lafalla", i:["Percusión","Bronces"]}
 ];
+var CH = ["chardonnay"], MA = ["malbec"], AMBAS = ["malbec","chardonnay"];
 var G_TALLERES = [G_IGL_CUERDAS, G_LAF_PERC, G_ALAS_VIENTOS];
 
 var DESAYUNO_SC = "Sport Club Argentino y Orquesta Escuela Alas del Viento";
@@ -250,18 +251,18 @@ var DAYS = [
  {short:"L", num:5,  name:"Lunes 05",     events:[
   ev("13:00",null,"Salida de Mza. a Gral. Alvear","traslado","Terminal de Mendoza Capital"),
   ev("17:00/18:00",null,"Llegada a Cine Teatro, acreditaciones y merienda","comida","Cine Teatro Antonio Lafalla"),
-  ev("18:30","20:00","Ensayo","ensayo","Cine Teatro Antonio Lafalla",{note:"Orquesta Chardonnay",tags:["chardonnay"]}),
-  ev("20:00","21:00","Mantención de instrumentos","taller","Cine Teatro Antonio Lafalla",{groups:[{p:"",i:["Cuerdas: Maestro Mauricio Manrique","Bronces: Maestro Adriany Gómez","Maderas: Maestro Francisco Ludueña"]}]}),
-  ev("20:00","21:00","Introducción al taller de dirección","taller","Cine Teatro Antonio Lafalla",{note:"Maestro Cesar Lara"}),
+  ev("18:30","20:00","Ensayo","ensayo","Cine Teatro Antonio Lafalla",{note:"Orquesta Chardonnay",tags:CH}),
+  ev("20:00","21:00","Mantención de instrumentos","taller","Cine Teatro Antonio Lafalla",{tags:CH,groups:[{p:"",i:["Cuerdas: Maestro Mauricio Manrique","Bronces: Maestro Adriany Gómez","Maderas: Maestro Francisco Ludueña"]}]}),
+  ev("20:00","21:00","Introducción al taller de dirección","taller","Cine Teatro Antonio Lafalla",{note:"Maestro Cesar Lara",tags:CH}),
   ev("21:00",null,"Traslado a albergue","traslado",ALBERGUE,{note:"Albergue"}),
   ev("22:00",null,"Cena","comida",ALBERGUE,{note:"Albergue"})
  ]},
  {short:"M", num:6,  name:"Martes 06",    events:[
   ev("7:30",null,"Traslado al centro","traslado",ALBERGUE,{note:"Albergue"}),
   ev("8:30",null,"Desayuno","comida","Sport Club Argentino"),
-  ev("9:00","12:00","Seccionales","seccional","",{groups:G_SECC}),
+  ev("9:00","12:00","Seccionales","seccional","",{groups:G_SECC,tags:CH}),
   ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
-  ev("15:00","17:30","Talleres por instrumento","taller","",{groups:G_TALLERES}),
+  ev("15:00","17:30","Talleres por instrumento","taller","",{groups:G_TALLERES,tags:CH}),
   ev("17:30",null,"Merienda","comida","Plaza Carlos María de Alvear"),
   ev("18:00","19:45","Ensayo Orq. Chardonnay","ensayo","Cine Teatro Antonio Lafalla",{tags:["chardonnay"]}),
   ev("20:00",null,"Cena","comida","Sport Club Argentino"),
@@ -271,21 +272,21 @@ var DAYS = [
  {short:"X", num:7,  name:"Miércoles 07", events:[
   ev("7:30",null,"Traslado al centro","traslado",ALBERGUE,{note:"Albergue"}),
   ev("8:00",null,"Desayuno","comida",DESAYUNO_SC),
-  ev("9:00","12:00","Seccionales","seccional","",{groups:G_SECC}),
-  ev("9:00","12:00","Talleres por instrumento – Orq. Chardonnay","taller","",{groups:G_TALLERES,tags:["chardonnay"]}),
+  ev("9:00","12:00","Talleres por instrumento – Orq. Chardonnay","taller","",{groups:G_TALLERES,tags:CH}),
   ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("15:00","16:15","Seccionales – Orq. Chardonnay","seccional","",{groups:G_SECC,tags:CH}),
   ev("16:30","18:45","Ensayo general Orq. Chardonnay","ensayo","Cine Teatro Antonio Lafalla",{note:"A cargo del maestro Cesar Lara",tags:["chardonnay"]}),
   ev("18:45",null,"Merienda","comida","Plaza Carlos María de Alvear"),
-  ev("19:15","21:00","Ensayo Orq. Malbec","ensayo","Cine Teatro Antonio Lafalla",{note:"A cargo del maestro Adriany Gómez",tags:["malbec"]}),
+  ev("19:15","21:00","Seccionales – Orq. Malbec","seccional","",{groups:G_SECC,tags:MA}),
   ev("21:00",null,"Cena","comida","Sport Club Argentinos"),
   ev("22:00",null,"Traslado","traslado",ALBERGUE)
  ]},
  {short:"J", num:8,  name:"Jueves 08",    events:[
   ev("7:30",null,"Traslado al centro","traslado",ALBERGUE,{note:"Albergue"}),
   ev("8:00",null,"Desayuno","comida",DESAYUNO_SC),
-  ev("9:00","12:00","Seccionales","seccional","",{groups:G_SECC}),
-  ev("9:00","12:00","Talleres por instrumento","taller","",{groups:G_TALLERES}),
+  ev("9:00","12:00","Talleres por instrumento","taller","",{groups:G_TALLERES,tags:AMBAS}),
   ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("15:00","16:15","Seccionales – Orq. Chardonnay","seccional","",{groups:G_SECC,tags:CH}),
   ev("16:15","18:45","Ensayo Orq. Chardonnay","ensayo","Teatro Antonio Lafalla",{note:"A cargo del Maestro César Iván Lara",tags:["chardonnay"]}),
   ev("18:45",null,"Merienda","comida","Plaza Carlos María de Alvear"),
   ev("19:15","20:30","Talleres por instrumento – Orq. Malbec","taller","",{tags:["malbec"],groups:[
@@ -298,11 +299,11 @@ var DAYS = [
  {short:"V", num:9,  name:"Viernes 09",   events:[
   ev("8:00",null,"Traslado al centro","traslado",ALBERGUE,{note:"Albergue"}),
   ev("8:30",null,"Desayuno","comida",DESAYUNO_SC),
-  ev("9:30","12:00","Talleres por instrumento","taller","",{note:"Bronces, maderas y contrabajos comienzan a las 9:30 hs",groups:[G_LAF_PERC,G_ALAS_VIENTOS]}),
-  ev("10:30","13:20","Talleres por instrumento","taller","",{note:"Las demás cuerdas comienzan a las 10:30 hs",groups:[G_IGL_CUERDAS]}),
+  ev("9:30","12:00","Talleres por instrumento","taller","",{note:"Bronces, maderas y contrabajos comienzan a las 9:30 hs",tags:AMBAS,groups:[G_LAF_PERC,G_ALAS_VIENTOS]}),
+  ev("10:30","13:20","Talleres por instrumento","taller","",{note:"Las demás cuerdas comienzan a las 10:30 hs",tags:AMBAS,groups:[G_IGL_CUERDAS]}),
   ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
   ev("15:30","17:30","Ensayo Orq. Chardonnay","ensayo","Cine Teatro Antonio Lafalla",{note:"A cargo del maestro Cesar Lara",tags:["chardonnay"]}),
-  ev("17:30","18:00","Miniorquesta","ensayo","Cine Teatro Antonio Lafalla"),
+  ev("17:30","18:00","Miniorquesta","ensayo","Cine Teatro Antonio Lafalla",{tags:AMBAS}),
   ev("18:00",null,"Merienda","comida","Plaza Carlos María de Alvear"),
   ev("18:30","20:30","Ensayo Orq. Malbec","ensayo","Teatro Antonio Lafalla",{note:"A cargo del maestro Adriany Gómez",tags:["malbec"]}),
   ev("20:30","22:00","Ensayo Orq. Chardonnay","ensayo","Teatro Antonio Lafalla",{note:"A cargo del maestro Cesar Lara",tags:["chardonnay"]}),
@@ -316,7 +317,7 @@ var DAYS = [
   ev("12:30",null,"Almuerzo","comida","Sport Club Argentino"),
   ev("14:30","16:30","Ensayo Orq. Chardonnay","ensayo","Teatro Antonio Lafalla",{note:"A cargo del Maestro Cesar Lara",tags:["chardonnay"]}),
   ev("17:00",null,"Merienda","comida","Orquesta Escuela Alas del Viento"),
-  ev("21:00",null,"Concierto","concierto","Cine Teatro Antonio Lafalla"),
+  ev("21:00",null,"Concierto","concierto","Cine Teatro Antonio Lafalla",{tags:AMBAS}),
   ev("23:00",null,"Cena","comida","Sport Club Argentino"),
   ev("00:00",null,"Traslado","traslado","Sport Club Argentino")
  ]},
@@ -325,8 +326,8 @@ var DAYS = [
   ev("10:00",null,"Traslado","traslado",ALBERGUE+" a Orquesta Escuela Alas del Viento"),
   ev("11:45",null,"Salida a Mendoza Capital","traslado","Orquesta Escuela Alas del Viento",{note:"Solo Orquesta Filarmónica · Almuerzo en el colectivo"}),
   ev("17:30",null,"Merienda","comida","Durante el traslado"),
-  ev("18:00","19:30","Prueba de sala / Ensayo","ensayo","Espacio Cultural “Eliana Molinelli”"),
-  ev("20:00",null,"Concierto","concierto","Espacio Cultural “Eliana Molinelli”"),
+  ev("18:00","19:30","Prueba de sala / Ensayo","ensayo","Espacio Cultural “Eliana Molinelli”",{tags:AMBAS}),
+  ev("20:00",null,"Concierto","concierto","Espacio Cultural “Eliana Molinelli”",{tags:AMBAS}),
   ev("22:00",null,"Traslado a albergue","traslado","Albergue"),
   ev("21:00",null,"Viaje","traslado","Viaje de vuelta chicos de General Alvear"),
   ev("22:30",null,"Cena","comida","Albergue")
@@ -391,7 +392,7 @@ function hoyInfo(){
 /* ============ RENDER ============ */
 function visible(e){
   if(state.orq==="todas") return true;
-  if(!e.tags) return true;
+  if(!e.tags) return false;
   return e.tags.indexOf(state.orq) !== -1;
 }
 function haystack(e){
@@ -406,7 +407,7 @@ function statuses(dayIdx){
   var h = hoyInfo(), out = {};
   if(!h.inRange || h.idx!==dayIdx) return out;
   var evs = DAYS[dayIdx].events;
-  var order = evs.map(function(e,i){return {i:i, s:mins(e.s)};}).sort(function(a,b){return a.s-b.s;});
+  var order = evs.map(function(e,i){return {i:i, s:mins(e.s), v:visible(e)};}).filter(function(o){return o.v;}).sort(function(a,b){return a.s-b.s;});
   var nextFound = false;
   order.forEach(function(o,k){
     var e = evs[o.i], start = o.s, end;
@@ -482,7 +483,7 @@ function renderList(){
     var st = statuses(state.day);
     var shown = d.events.map(function(e,i){return {e:e,i:i};}).filter(function(o){return visible(o.e);});
     html = shown.map(function(o){ return cardHTML(o.e, st[o.i]); }).join("");
-    if(!html) html = '<div class="empty">No hay actividades para este filtro.</div>';
+    if(!html) html = '<div class="empty">Sin actividades</div>';
   }
   list.innerHTML = html;
 }
