@@ -1,6 +1,6 @@
 {
   "id": "./",
-  "name": "Cosecha",
+  "name": "Cosecha Sinfónica",
   "short_name": "Cosecha",
   "start_url": "./",
   "scope": "./",
@@ -13,6 +13,4 @@
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
-}
-
 }
