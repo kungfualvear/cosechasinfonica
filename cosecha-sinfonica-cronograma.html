@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#5B1A3A">
+<title>Cosecha Sinfónica – Cronograma</title>
+<style>
+:root{
+  --bordo:#5B1A3A; --bordo2:#744059; --verde:#4F6B2A; --dorado:#C9A24A; --dorado-osc:#9a7a2c;
+  --crema:#FFFDF0; --crema2:#F8F2DC; --texto:#3d1328; --suave:#7a6a55; --linea:#e3d9b8; --card:#ffffff;
+  --c-ensayo:#5B1A3A; --c-taller:#4F6B2A; --c-seccional:#2f7f79; --c-comida:#C9A24A; --c-traslado:#7a6a55; --c-recreacion:#b4562f; --c-concierto:#8b1d52; --c-otro:#7a6a55;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --crema:#1c1318; --crema2:#2a1c24; --texto:#f3e9e0; --suave:#b9a99a; --linea:#46313c; --card:#26191f;
+    --bordo:#4a1530; --dorado:#d9b45c; --verde:#8fb05a;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--crema);color:var(--texto);font-size:16px;line-height:1.35;
+  padding-bottom:calc(64px + env(safe-area-inset-bottom));
+}
+header.top{
+  background:var(--bordo);color:#fff;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+  display:flex;align-items:center;gap:12px;
+}
+header.top svg{flex:none;width:44px;height:44px}
+header.top .t1{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:14px;letter-spacing:.04em;color:#d9d5b0;text-transform:uppercase;line-height:1.15}
+header.top .t2{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:20px;color:var(--dorado);letter-spacing:.04em;line-height:1.1}
+header.top .t3{font-size:12px;color:#e8d7df;margin-top:3px}
+#aviso{display:none;background:var(--dorado);color:#2b1a05;padding:10px 16px;font-weight:600;font-size:14px}
+#aviso.on{display:block}
+
+.view{display:none}
+.view.on{display:block}
+
+/* barra de días */
+#dayBar{
+  position:sticky;top:0;z-index:20;background:var(--crema2);border-bottom:1px solid var(--linea);
+  display:flex;gap:6px;padding:8px 10px;overflow-x:auto;scrollbar-width:none;
+}
+#dayBar::-webkit-scrollbar{display:none}
+.daybtn{
+  flex:1 0 auto;min-width:48px;min-height:56px;border:1.5px solid var(--linea);background:var(--card);color:var(--texto);
+  border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:inherit;cursor:pointer;position:relative;
+}
+.daybtn span{font-size:12px;color:var(--suave);font-weight:600}
+.daybtn b{font-size:20px;line-height:1.1}
+.daybtn.active{background:var(--bordo);border-color:var(--bordo);color:#fff}
+.daybtn.active span{color:var(--dorado)}
+.daybtn.today::after{content:"";position:absolute;top:5px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--dorado)}
+
+/* controles */
+.controls{padding:12px 14px 4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.chip{
+  min-height:44px;padding:0 16px;border-radius:22px;border:1.5px solid var(--bordo2);background:transparent;color:var(--texto);
+  font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;
+}
+.chip small{font-weight:500;color:var(--suave)}
+.chip.on{background:var(--bordo);color:#fff;border-color:var(--bordo)}
+.chip.on small{color:var(--dorado)}
+.search{
+  width:100%;min-height:44px;border:1.5px solid var(--linea);border-radius:12px;padding:0 14px;font-size:16px;font-family:inherit;
+  background:var(--card);color:var(--texto);
+}
+.search::placeholder{color:var(--suave)}
+
+/* encabezado de día */
+.dayhead{padding:10px 16px 2px}
+.dayhead h2{margin:0;font-family:Georgia,"Times New Roman",serif;font-size:24px;color:var(--bordo)}
+@media (prefers-color-scheme: dark){.dayhead h2{color:var(--dorado)}}
+.dayhead p{margin:0;color:var(--suave);font-size:14px}
+.daylabel{padding:16px 16px 2px;font-weight:700;color:var(--dorado-osc);text-transform:uppercase;font-size:13px;letter-spacing:.06em}
+
+/* eventos */
+#list{padding:8px 12px 12px;touch-action:pan-y}
+.ev{
+  display:flex;gap:12px;background:var(--card);border:1px solid var(--linea);border-left:6px solid var(--c-otro);
+  border-radius:12px;padding:12px;margin:10px 0;position:relative;
+}
+.ev.t-ensayo{border-left-color:var(--c-ensayo)}
+.ev.t-taller{border-left-color:var(--c-taller)}
+.ev.t-seccional{border-left-color:var(--c-seccional)}
+.ev.t-comida{border-left-color:var(--c-comida)}
+.ev.t-traslado{border-left-color:var(--c-traslado)}
+.ev.t-recreacion{border-left-color:var(--c-recreacion)}
+.ev.t-concierto{border-left-color:var(--c-concierto);background:linear-gradient(180deg,var(--card),var(--crema2));box-shadow:0 0 0 1.5px var(--dorado)}
+.ev .time{flex:0 0 86px;font-weight:800;font-size:18px;line-height:1.15;color:var(--bordo)}
+@media (prefers-color-scheme: dark){.ev .time{color:var(--dorado)}}
+.ev .time small{display:block;font-weight:600;font-size:12px;color:var(--suave);margin-top:2px}
+.ev .body{flex:1;min-width:0}
+.ev h3{margin:0 0 3px;font-size:16px;line-height:1.25}
+.ev .place{font-weight:700;font-size:13px;color:var(--bordo2);text-transform:uppercase;letter-spacing:.02em}
+@media (prefers-color-scheme: dark){.ev .place{color:#d8a9c1}}
+.ev .note{margin-top:4px;font-size:14px;color:var(--texto)}
+.ev .more{margin-top:6px;font-size:13px;color:var(--verde);font-weight:700}
+.ev .det{display:none;margin-top:8px;border-top:1px dashed var(--linea);padding-top:8px}
+.ev.open .det{display:block}
+.ev.open .more::after{content:" ▴"}
+.ev:not(.open) .more::after{content:" ▾"}
+.det .gp{font-weight:700;font-size:13px;color:var(--bordo2);margin-top:6px;text-transform:uppercase}
+@media (prefers-color-scheme: dark){.det .gp{color:#d8a9c1}}
+.det ul{margin:3px 0 0;padding-left:18px}
+.det li{margin:2px 0;font-size:15px}
+.badge{
+  position:absolute;top:-9px;right:10px;font-size:11px;font-weight:800;letter-spacing:.06em;padding:3px 9px;border-radius:10px;
+}
+.badge.now{background:#c2183f;color:#fff}
+.badge.next{background:var(--dorado);color:#2b1a05}
+.ev.done{opacity:.55}
+.ev.now{box-shadow:0 0 0 2px #c2183f}
+.empty{text-align:center;color:var(--suave);padding:30px 16px}
+
+/* lugares / docentes */
+.card{background:var(--card);border:1px solid var(--linea);border-radius:12px;padding:14px;margin:10px 12px}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--bordo)}
+@media (prefers-color-scheme: dark){.card h3{color:var(--dorado)}}
+.card p{margin:0;font-size:15px}
+.card .dim{color:var(--suave);font-style:italic}
+.card .who{font-weight:700}
+.card .what{color:var(--suave);font-size:14px}
+.sect{padding:14px 16px 0;font-family:Georgia,"Times New Roman",serif;font-size:22px;color:var(--bordo)}
+@media (prefers-color-scheme: dark){.sect{color:var(--dorado)}}
+
+/* navegación inferior */
+nav.bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bordo);display:flex;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+nav.bottom button{
+  flex:1;min-height:60px;border:0;background:transparent;color:#d8c4cd;font-family:inherit;font-size:12px;font-weight:700;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;
+}
+nav.bottom button .ic{font-size:22px;line-height:1}
+nav.bottom button.on{color:var(--dorado)}
+
+footer.pie{padding:18px 16px 4px;text-align:center;color:var(--suave);font-size:12px}
+
+@media (min-width:700px){
+  body{max-width:560px;margin:0 auto;border-left:1px solid var(--linea);border-right:1px solid var(--linea)}
+  nav.bottom{max-width:560px;left:50%;transform:translateX(-50%)}
+}
+@media print{
+  nav.bottom,#dayBar,.controls{display:none}
+  .view{display:block!important}
+  .ev .det{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="30" fill="#FFFDF0"/>
+    <g stroke="#C9A24A" stroke-width="2.5" stroke-linecap="round">
+      <line x1="10" y1="22" x2="18" y2="26"/><line x1="14" y1="12" x2="20" y2="19"/><line x1="24" y1="7" x2="26" y2="16"/>
+    </g>
+    <path d="M28 8c4-3 8 1 6 6-2 5-8 10-6 18 1 5 6 6 6 2s-6-4-8 0" fill="none" stroke="#C9A24A" stroke-width="3" stroke-linecap="round"/>
+    <path d="M8 44c6-8 12-14 18-12 2 8-4 12-8 14 4 2 2 8-4 12z" fill="#744827"/>
+    <circle cx="42" cy="38" r="5" fill="#5B1A3A"/><circle cx="50" cy="34" r="5" fill="#5B1A3A"/><circle cx="48" cy="44" r="5" fill="#5B1A3A"/>
+    <circle cx="40" cy="48" r="5" fill="#5B1A3A"/><circle cx="46" cy="53" r="4.5" fill="#5B1A3A"/>
+    <path d="M44 30c4-8 10-8 14-4-4 6-8 6-14 4z" fill="#4F6B2A"/>
+  </svg>
+  <div>
+    <div class="t1">2º Festival Nacional de Orquestas</div>
+    <div class="t2">COSECHA SINFÓNICA</div>
+    <div class="t3">Cronograma de actividades · 5 al 11 de octubre</div>
+  </div>
+</header>
+
+<div id="aviso"></div>
+
+<!-- AGENDA -->
+<section id="v-agenda" class="view on">
+  <div id="dayBar"></div>
+  <div class="controls">
+    <div class="chips" id="chips"></div>
+    <input class="search" id="q" type="search" placeholder="Buscar: viola, cena, Lara, Sport Club…" autocomplete="off">
+  </div>
+  <div id="head"></div>
+  <div id="list"></div>
+</section>
+
+<!-- LUGARES -->
+<section id="v-lugares" class="view">
+  <div class="sect">Direcciones</div>
+  <div id="lugares"></div>
+</section>
+
+<!-- DOCENTES -->
+<section id="v-docentes" class="view">
+  <div class="sect">Docentes</div>
+  <div id="docentes"></div>
+  <div class="sect">Orquestas</div>
+  <div id="orquestas"></div>
+</section>
+
+<footer class="pie">
+  Asociación Civil Orquesta Filarmónica de General Alvear · Municipalidad de General Alvear · Alas del Viento
+</footer>
+
+<nav class="bottom">
+  <button data-view="agenda" class="on"><span class="ic">📅</span>Agenda</button>
+  <button data-view="lugares"><span class="ic">📍</span>Lugares</button>
+  <button data-view="docentes"><span class="ic">🎻</span>Docentes</button>
+</nav>
+
+<script>
+/* ============ AVISO (dejar vacío para ocultar) ============ */
+var AVISO = "";
+
+/* ============ DATOS ============ */
+function ev(s, e, title, type, place, o){
+  o = o || {};
+  return {s:s, e:e||null, title:title, type:type, place:place||"", note:o.note||"", groups:o.groups||null, tags:o.tags||null};
+}
+
+var G_IGL_CUERDAS = {p:"Iglesia Sagrado Corazón", i:["Violín 1: Mauricio Manrique","Violoncello: Joaquín Figueredo","Violín 2: Leandro Quiroga","Viola: Lucas Camacho"]};
+var G_LAF_PERC    = {p:"Teatro Antonio Lafalla", i:["Percusión: César Lara","Contrabajos: Delfina Maschio"]};
+var G_ALAS_VIENTOS= {p:"Orquesta Escuela Alas del Viento", i:["Bronces: Adriany Gómez","Maderas: Francisco Ludueña"]};
+var G_SECC = [
+  {p:"Iglesia Sagrado Corazón", i:["Cuerdas: Mauricio Manrique","Maderas: Francisco Ludueña"]},
+  {p:"Teatro Antonio Lafalla", i:["Percusión: César Lara","Bronces: Adriany Gómez"]}
+];
+var G_TALLERES = [G_IGL_CUERDAS, G_LAF_PERC, G_ALAS_VIENTOS];
+
+var DESAYUNO_SC = "Sport Club Argentino y Orquesta Escuela Alas del Viento";
+var ALBERGUE = "Casa de Retiro “Cura Brochero”";
+
+var DAYS = [
+ {short:"L", num:5,  name:"Lunes 05",     events:[
+  ev("13:00",null,"Salida de Mza. a Gral. Alvear","traslado","Terminal de Mendoza Capital"),
+  ev("17:00/18:00",null,"Llegada a Cine Teatro, acreditaciones y merienda","comida","Cine Teatro Antonio Lafalla"),
+  ev("18:30","20:00","Ensayo","ensayo","Cine Teatro Antonio Lafalla",{note:"Orquesta Chardonnay",tags:["chardonnay"]}),
+  ev("20:00","21:00","Mantención de instrumentos","taller","Cine Teatro Antonio Lafalla",{groups:[{p:"",i:["Cuerdas: Maestro Mauricio Manrique","Bronces: Maestro Adriany Gómez","Maderas: Maestro Francisco Ludueña"]}]}),
+  ev("20:00","21:00","Introducción al taller de dirección","taller","Cine Teatro Antonio Lafalla",{note:"Maestro Cesar Lara"}),
+  ev("21:00",null,"Traslado a albergue","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("22:00",null,"Cena","comida",ALBERGUE,{note:"Albergue"})
+ ]},
+ {short:"M", num:6,  name:"Martes 06",    events:[
+  ev("8:00",null,"Traslado al centro","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("8:30",null,"Desayuno","comida",DESAYUNO_SC),
+  ev("10:20","12:30","Seccionales","seccional","",{groups:G_SECC}),
+  ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("15:00","17:30","Talleres por instrumento","taller","",{groups:G_TALLERES}),
+  ev("17:30",null,"Merienda","comida","Plaza Carlos María de Alvear"),
+  ev("18:00","19:45","Ensayo Orq. Chardonnay","ensayo","Cine Teatro Antonio Lafalla",{tags:["chardonnay"]}),
+  ev("20:00",null,"Cena","comida","Sport Club Argentino"),
+  ev("21:30",null,"Recreación","recreacion","Bodega Cavas del Artesano"),
+  ev("23:00",null,"Traslado a albergue","traslado","Albergue “Cura Brochero”",{note:"Colectivo Municipal"})
+ ]},
+ {short:"X", num:7,  name:"Miércoles 07", events:[
+  ev("7:30",null,"Traslado al centro","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("8:00",null,"Desayuno","comida",DESAYUNO_SC),
+  ev("9:00","12:00","Talleres por instrumento – Orq. Chardonnay","taller","",{groups:G_TALLERES,tags:["chardonnay"]}),
+  ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("15:00","16:15","Seccionales","seccional","",{groups:G_SECC}),
+  ev("16:30","18:45","Ensayo general Orq. Chardonnay","ensayo","Cine Teatro Antonio Lafalla",{note:"A cargo del maestro Cesar Lara",tags:["chardonnay"]}),
+  ev("18:45",null,"Merienda","comida","Plaza Carlos María de Alvear"),
+  ev("19:15","21:00","Ensayo Orq. Malbec","ensayo","Cine Teatro Antonio Lafalla",{note:"A cargo del maestro Adriany Gómez",tags:["malbec"]}),
+  ev("21:00",null,"Cena","comida","Sport Club Argentinos"),
+  ev("22:00",null,"Traslado","traslado",ALBERGUE)
+ ]},
+ {short:"J", num:8,  name:"Jueves 08",    events:[
+  ev("7:30",null,"Traslado","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("8:00",null,"Desayuno","comida",DESAYUNO_SC),
+  ev("9:00","12:00","Talleres por instrumento","taller","",{groups:G_TALLERES}),
+  ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("15:00","16:15","Seccionales","seccional","",{groups:G_SECC}),
+  ev("16:15","18:45","Ensayo Orq. Chardonnay","ensayo","Teatro Antonio Lafalla",{note:"A cargo del Maestro César Iván Lara",tags:["chardonnay"]}),
+  ev("18:45",null,"Merienda","comida","Plaza Carlos María de Alvear"),
+  ev("19:15","20:30","Talleres por instrumento","taller","Teatro Antonio Lafalla",{note:"A cargo del Maestro Adriany Gómez"}),
+  ev("20:30",null,"Traslado","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("21:00",null,"Fogón","recreacion",ALBERGUE,{note:"Albergue"})
+ ]},
+ {short:"V", num:9,  name:"Viernes 09",   events:[
+  ev("8:00",null,"Traslado","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("8:30",null,"Desayuno","comida",DESAYUNO_SC),
+  ev("9:30","12:00","Talleres por instrumento","taller","",{groups:[G_LAF_PERC,G_ALAS_VIENTOS]}),
+  ev("10:20","12:30","Talleres por instrumento","taller","",{groups:[G_IGL_CUERDAS]}),
+  ev("13:00",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("15:30","17:30","Ensayo Orq. Chardonnay","ensayo","Cine Teatro Antonio Lafalla",{note:"A cargo del maestro Cesar Lara",tags:["chardonnay"]}),
+  ev("17:30","18:00","Miniorquesta","ensayo","Cine Teatro Antonio Lafalla"),
+  ev("18:00",null,"Merienda","comida","Plaza Carlos María de Alvear"),
+  ev("18:30","20:30","Ensayo Orq. Malbec","ensayo","Teatro Antonio Lafalla",{note:"A cargo del maestro Adriany Gómez",tags:["malbec"]}),
+  ev("20:30","22:00","Ensayo Orq. Chardonnay","ensayo","Teatro Antonio Lafalla",{note:"A cargo del maestro Cesar Lara",tags:["chardonnay"]}),
+  ev("22:15",null,"Cena","comida","Sport Club Argentino"),
+  ev("23:15",null,"Traslado","traslado",ALBERGUE,{note:"Albergue"})
+ ]},
+ {short:"S", num:10, name:"Sábado 10",    events:[
+  ev("9:00",null,"Desayuno","comida",ALBERGUE,{note:"Albergue"}),
+  ev("10:00","12:00","Ensayo Orq. Malbec","ensayo","Teatro Antonio Lafalla",{note:"A cargo del Maestro Adriany Gómez",tags:["malbec"]}),
+  ev("10:00",null,"Traslado","traslado",ALBERGUE,{note:"Albergue"}),
+  ev("12:30",null,"Almuerzo","comida","Sport Club Argentino"),
+  ev("14:30","16:30","Ensayo Orq. Chardonnay","ensayo","Teatro Antonio Lafalla",{note:"A cargo del Maestro Cesar Lara",tags:["chardonnay"]}),
+  ev("17:00",null,"Merienda","comida","Orquesta Escuela Alas del Viento"),
+  ev("21:00",null,"Concierto","concierto","Cine Teatro Antonio Lafalla"),
+  ev("23:00",null,"Cena","comida","Sport Club Argentino"),
+  ev("00:00",null,"Traslado","traslado","Sport Club Argentino")
+ ]},
+ {short:"D", num:11, name:"Domingo 11",   events:[
+  ev("09:00",null,"Desayuno","comida",ALBERGUE,{note:"Albergue"}),
+  ev("10:00",null,"Traslado","traslado",ALBERGUE+" a Orquesta Escuela Alas del Viento"),
+  ev("11:45",null,"Almuerzo","comida","Orquesta Escuela Alas del Viento"),
+  ev("12:30",null,"Salida a Mendoza Capital","traslado","Orquesta Escuela Alas del Viento"),
+  ev("17:30",null,"Merienda","comida","Durante el traslado"),
+  ev("18:00","19:30","Prueba de sala / Ensayo","ensayo","Espacio Cultural “Eliana Molinelli”"),
+  ev("20:00",null,"Concierto","concierto","Espacio Cultural “Eliana Molinelli”"),
+  ev("22:00",null,"Traslado a albergue","traslado","Albergue"),
+  ev("21:00",null,"Viaje","traslado","Viaje de vuelta chicos de General Alvear"),
+  ev("22:30",null,"Cena","comida","Albergue")
+ ]}
+];
+
+var LUGARES = [
+ {n:"Albergue “Cura Brochero”", d:"Carmensa."},
+ {n:"Cine Teatro Antonio Lafalla", d:"Av. Alvear Oeste 437."},
+ {n:"Escuela Alas del Viento", d:"Roque Saenz Peña 16."},
+ {n:"Iglesia Sagrado Corazón", d:"Olascoaga 16."},
+ {n:"Cavas del Artesano", d:"Ruta 188 km 791 Ruta 188 entre calle 7y10."},
+ {n:"Plaza Carlos María de Alvear", d:"Olascoaga 16."},
+ {n:"Sport Club Argentino", d:""}
+];
+
+var DOCENTES = [
+ {n:"Mauricio Manrique", r:"Violín 1 · Cuerdas"},
+ {n:"Joaquín Figueredo", r:"Violoncello"},
+ {n:"Leandro Quiroga",   r:"Violín 2"},
+ {n:"Lucas Camacho",     r:"Viola"},
+ {n:"César Lara",        r:"Percusión · Taller de dirección · Orq. Chardonnay"},
+ {n:"Delfina Maschio",   r:"Contrabajos"},
+ {n:"Adriany Gómez",     r:"Bronces · Orq. Malbec"},
+ {n:"Francisco Ludueña", r:"Maderas"}
+];
+
+var ORQUESTAS = [
+ {k:"malbec",     n:"Orquesta Malbec",     r:"Infantil"},
+ {k:"chardonnay", n:"Orquesta Chardonnay", r:"Juvenil"}
+];
+
+/* ============ UTILIDADES ============ */
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+function mins(t){
+  var m = /^(\d{1,2}):(\d{2})/.exec(t); if(!m) return 0;
+  var h = +m[1], mi = +m[2], v = h*60+mi;
+  if(h < 4) v += 1440;               // 00:00 pertenece a la madrugada del día siguiente
+  return v;
+}
+function fmtHora(t){ return /^\d{1,2}:\d{2}$/.test(t) ? t+" hs" : t.replace(/(\d{2})$/, "$1")+" hs"; }
+var ICON = {ensayo:"🎻",taller:"🎼",seccional:"👥",comida:"🍽️",traslado:"🚌",recreacion:"🎉",concierto:"🎶",otro:"📍"};
+var TIPO = {ensayo:"Ensayo",taller:"Taller",seccional:"Seccional",comida:"Comida",traslado:"Traslado",recreacion:"Recreación",concierto:"Concierto",otro:""};
+
+function store(k,v){ try{ if(v===undefined) return localStorage.getItem(k); localStorage.setItem(k,v);}catch(e){return null;} }
+
+/* ============ ESTADO ============ */
+var state = {view:"agenda", day:0, orq:"todas", q:""};
+var savedOrq = store("cs_orq");
+if(savedOrq==="malbec"||savedOrq==="chardonnay"||savedOrq==="todas") state.orq = savedOrq;
+
+function hoyInfo(){
+  var d = new Date();
+  var inRange = (d.getFullYear()===2026 && d.getMonth()===9 && d.getDate()>=5 && d.getDate()<=11);
+  return {inRange:inRange, idx: inRange ? d.getDate()-5 : -1, min: d.getHours()*60+d.getMinutes(), before: d < new Date(2026,9,5), after: d >= new Date(2026,9,12)};
+}
+(function initDay(){
+  var h = hoyInfo();
+  if(h.inRange) state.day = h.idx; else if(h.after) state.day = 6; else state.day = 0;
+})();
+
+/* ============ RENDER ============ */
+function visible(e){
+  if(state.orq==="todas") return true;
+  if(!e.tags) return true;
+  return e.tags.indexOf(state.orq) !== -1;
+}
+function haystack(e){
+  var t = [e.title, e.place, e.note, TIPO[e.type]];
+  if(e.groups) e.groups.forEach(function(g){ t.push(g.p); t = t.concat(g.i); });
+  return t.join(" ").toLowerCase();
+}
+function norm(s){ return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+
+function statuses(dayIdx){
+  var h = hoyInfo(), out = {};
+  if(!h.inRange || h.idx!==dayIdx) return out;
+  var evs = DAYS[dayIdx].events;
+  var order = evs.map(function(e,i){return {i:i, s:mins(e.s)};}).sort(function(a,b){return a.s-b.s;});
+  var nextFound = false;
+  order.forEach(function(o,k){
+    var e = evs[o.i], start = o.s, end;
+    if(e.e) end = mins(e.e);
+    else {
+      end = start + 60;
+      for(var j=k+1;j<order.length;j++){ if(order[j].s>start){ end = order[j].s; break; } }
+    }
+    if(h.min >= end) out[o.i] = "done";
+    else if(h.min >= start) out[o.i] = "now";
+    else if(!nextFound){ out[o.i] = "next"; nextFound = true; }
+  });
+  return out;
+}
+
+function cardHTML(e, st){
+  var h = fmtHora(e.s), time;
+  if(e.e) time = e.s.replace(/^0(\d)/,"$1") + '<small>a ' + e.e + ' hs</small>';
+  else time = h.replace(" hs","") + '<small>hs</small>';
+  var badge = st==="now" ? '<span class="badge now">AHORA</span>' : (st==="next" ? '<span class="badge next">SIGUIENTE</span>' : "");
+  var det = "";
+  if(e.groups){
+    det = '<div class="det">' + e.groups.map(function(g){
+      return (g.p ? '<div class="gp">'+esc(g.p)+'</div>' : '') + '<ul>' + g.i.map(function(x){return '<li>'+esc(x)+'</li>';}).join("") + '</ul>';
+    }).join("") + '</div>';
+  }
+  return '<article class="ev t-'+e.type+' '+(st||"")+'" '+(e.groups?'data-toggle="1"':'')+'>' + badge +
+    '<div class="time">'+time+'</div>' +
+    '<div class="body"><h3>'+ICON[e.type]+' '+esc(e.title)+'</h3>' +
+    (e.place ? '<div class="place">'+esc(e.place)+'</div>' : '') +
+    (e.note ? '<div class="note">'+esc(e.note)+'</div>' : '') +
+    (e.groups ? '<div class="more">Ver docentes y salas</div>' + det : '') +
+    '</div></article>';
+}
+
+function renderDayBar(){
+  var h = hoyInfo();
+  var html = DAYS.map(function(d,i){
+    return '<button class="daybtn'+(i===state.day?' active':'')+(h.inRange&&h.idx===i?' today':'')+'" data-day="'+i+'" aria-label="'+d.name+' de octubre"><span>'+d.short+'</span><b>'+d.num+'</b></button>';
+  }).join("");
+  var bar = document.getElementById("dayBar");
+  bar.innerHTML = html;
+  var a = bar.querySelector(".active");
+  if(a && a.scrollIntoView){ try{ a.scrollIntoView({inline:"center",block:"nearest"}); }catch(e){} }
+}
+
+function renderChips(){
+  var c = document.getElementById("chips");
+  c.innerHTML =
+    '<button class="chip'+(state.orq==="todas"?' on':'')+'" data-orq="todas">Todas</button>' +
+    ORQUESTAS.map(function(o){
+      return '<button class="chip'+(state.orq===o.k?' on':'')+'" data-orq="'+o.k+'">'+o.n.replace("Orquesta ","")+' <small>'+o.r.toLowerCase()+'</small></button>';
+    }).join("");
+}
+
+function renderList(){
+  var list = document.getElementById("list"), head = document.getElementById("head");
+  var q = norm(state.q.trim());
+  var html = "";
+  if(q){
+    head.innerHTML = '<div class="dayhead"><h2>Resultados</h2><p>Búsqueda en toda la semana</p></div>';
+    DAYS.forEach(function(d){
+      var m = d.events.filter(function(e){ return visible(e) && norm(haystack(e)).indexOf(q)!==-1; });
+      if(m.length){
+        html += '<div class="daylabel">'+d.name+' de octubre</div>' + m.map(function(e){return cardHTML(e,"");}).join("");
+      }
+    });
+    if(!html) html = '<div class="empty">No se encontraron actividades.</div>';
+  } else {
+    var d = DAYS[state.day];
+    head.innerHTML = '<div class="dayhead"><h2>'+d.name+'</h2><p>de octubre'+(state.orq!=="todas"?' · Orquesta '+(state.orq==="malbec"?"Malbec":"Chardonnay"):'')+'</p></div>';
+    var st = statuses(state.day);
+    var shown = d.events.map(function(e,i){return {e:e,i:i};}).filter(function(o){return visible(o.e);});
+    html = shown.map(function(o){ return cardHTML(o.e, st[o.i]); }).join("");
+    if(!html) html = '<div class="empty">No hay actividades para este filtro.</div>';
+  }
+  list.innerHTML = html;
+}
+
+function renderStatic(){
+  document.getElementById("lugares").innerHTML = LUGARES.map(function(l){
+    return '<div class="card"><h3>'+esc(l.n)+'</h3>' + (l.d ? '<p>'+esc(l.d)+'</p>' : '<p class="dim">Dirección no informada en el cronograma.</p>') + '</div>';
+  }).join("");
+  document.getElementById("docentes").innerHTML = DOCENTES.map(function(d){
+    return '<div class="card"><p class="who">'+esc(d.n)+'</p><p class="what">'+esc(d.r)+'</p></div>';
+  }).join("");
+  document.getElementById("orquestas").innerHTML = ORQUESTAS.map(function(o){
+    return '<div class="card"><p class="who">'+esc(o.n)+'</p><p class="what">'+esc(o.r)+'</p></div>';
+  }).join("");
+}
+
+function setView(v){
+  state.view = v;
+  ["agenda","lugares","docentes"].forEach(function(k){
+    document.getElementById("v-"+k).classList.toggle("on", k===v);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("nav.bottom button"), function(b){
+    b.classList.toggle("on", b.getAttribute("data-view")===v);
+  });
+  window.scrollTo(0,0);
+}
+
+function setDay(i){
+  if(i<0||i>6) return;
+  state.day = i; state.q = ""; document.getElementById("q").value = "";
+  renderDayBar(); renderList();
+}
+
+/* ============ EVENTOS ============ */
+document.getElementById("dayBar").addEventListener("click", function(e){
+  var b = e.target.closest(".daybtn"); if(!b) return;
+  setDay(+b.getAttribute("data-day")); window.scrollTo(0,0);
+});
+document.getElementById("chips").addEventListener("click", function(e){
+  var b = e.target.closest(".chip"); if(!b) return;
+  state.orq = b.getAttribute("data-orq"); store("cs_orq", state.orq);
+  renderChips(); renderList();
+});
+document.getElementById("q").addEventListener("input", function(e){
+  state.q = e.target.value; renderList();
+});
+document.getElementById("list").addEventListener("click", function(e){
+  var a = e.target.closest(".ev[data-toggle]"); if(a) a.classList.toggle("open");
+});
+Array.prototype.forEach.call(document.querySelectorAll("nav.bottom button"), function(b){
+  b.addEventListener("click", function(){ setView(b.getAttribute("data-view")); });
+});
+
+/* deslizar para cambiar de día */
+(function(){
+  var x0=0,y0=0,t0=0, el=document.getElementById("list");
+  el.addEventListener("touchstart", function(e){ var t=e.changedTouches[0]; x0=t.clientX; y0=t.clientY; t0=Date.now(); }, {passive:true});
+  el.addEventListener("touchend", function(e){
+    if(state.q.trim()) return;
+    var t=e.changedTouches[0], dx=t.clientX-x0, dy=t.clientY-y0;
+    if(Math.abs(dx)>70 && Math.abs(dy)<45 && Date.now()-t0<600){
+      setDay(state.day + (dx<0?1:-1)); window.scrollTo(0,0);
+    }
+  }, {passive:true});
+})();
+
+/* ============ INICIO ============ */
+if(AVISO){ var av=document.getElementById("aviso"); av.textContent=AVISO; av.classList.add("on"); }
+renderStatic(); renderChips(); renderDayBar(); renderList();
+setInterval(function(){ if(!state.q.trim()) renderList(); }, 60000);
+</script>
+</body>
+</html>
